@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remake Kingdom - Minecraft Server</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="regels.html">Regels</a></li>
+                <li><a href="uitleg.html">Uitleg</a></li>
+                <li><a href="webshop.html">Webshop</a></li>
+                <li><a href="staff.html">Staff</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero fade-in">
+        <img src="assets/logo.png" alt="RKD Logo" class="hero-logo">
+        <h1>Remake Kingdom</h1>
+        <p>De Remake Kingdom server van vroeger</p>
+        <div class="server-ip" onclick="copyIP()">
+            📌 play.remakekingdom.nl
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card fade-in">
+                <h2>🎮 Speel Nu</h2>
+                <p>Join onze 24/7 online server en begin direct met bouwen. Geen whitelist, gewoon joinen en spelen!</p>
+            </div>
+
+            <div class="card fade-in">
+                <h2>🗺️ Custom Map</h2>
+                <p>Verken onze unieke custom map met 6 kingdoms, 1 handelseiland en het mysterieuze Balkadur Eiland!</p>
+            </div>
+
+            <div class="card fade-in">
+                <h2>⚔️ Balkadurkoth Event</h2>
+                <p>Elke woensdag een episch Balkadurkoth event! Neem het op tegen de ultieme uitdaging en win unieke beloningen.</p>
+            </div>
+
+            <div class="card fade-in">
+                <h2>🏰 Zondag Oorlog</h2>
+                <p>Elke zondag barst de grote oorlog los! Verdedig jouw kingdom of val aan en verover nieuwe gebieden!</p>
+            </div>
+
+            <div class="card fade-in">
+                <h2>🗡️ Strategische Aanvallen</h2>
+                <p>Plan strategische aanvallen op andere kingdoms 24/7! Verover forten, plunder schatten en word legendarisch!</p>
+            </div>
+
+            <div class="card fade-in">
+                <h2>⚡ Tolbruggen & Landbruggen</h2>
+                <p>24/7 intense PvP fights op de strategische tolbruggen en landbruggen. Controleer de toegang tot de kingdoms!</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem;">
+            <h2 class="section-title">Klaar om te beginnen?</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.15rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Kopieer het server IP en voeg Remake Kingdom toe aan je Minecraft. We zien je online!
+            </p>
+            <a href="regels.html" class="btn">📜 Lees de Regels</a>
+            <a href="webshop.html" class="btn btn-secondary" style="margin-left: 1rem;">🛍️ Bezoek Webshop</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Remake Kingdom. Alle rechten voorbehouden.</p>
+    </footer>
+
+    <script>
+        function copyIP() {
+            const ip = 'play.remakekingdom.nl';
+            navigator.clipboard.writeText(ip).then(() => {
+                // Create modern notification
+                const notification = document.createElement('div');
+                notification.textContent = '✅ Server IP gekopieerd!';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 100px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(16, 185, 129, 0.95);
+                    backdrop-filter: blur(20px);
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 16px;
+                    font-weight: 600;
+                    z-index: 10000;
+                    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+                    animation: slideDown 0.4s ease-out;
+                `;
+                document.body.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.animation = 'slideUp 0.4s ease-out';
+                    setTimeout(() => notification.remove(), 400);
+                }, 2000);
+            });
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideDown {
+                from { opacity: 0; transform: translate(-50%, -20px); }
+                to { opacity: 1; transform: translate(-50%, 0); }
+            }
+            @keyframes slideUp {
+                from { opacity: 1; transform: translate(-50%, 0); }
+                to { opacity: 0; transform: translate(-50%, -20px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Fade in animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease-out';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

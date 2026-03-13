@@ -1,0 +1,16 @@
+ACHTERGROND AFBEELDING TOEVOEGEN
+===================================
+
+Upload hier je Minecraft world achtergrond afbeelding als: rkd-background.jpg
+
+Bestandsnaam: rkd-background.jpg
+Aanbevolen formaat: 1920x1080 of hoger
+Bestandstype: .jpg of .png
+
+De achtergrond wordt gebruikt op:
+- Homepage hero sectie (fullscreen)
+- Regels pagina hero
+- Staff pagina hero  
+- Webshop pagina hero
+
+Tip: Gebruik een mooie screenshot van je Minecraft server world voor de beste uitstraling!

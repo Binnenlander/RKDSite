@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webshop - Remake Kingdom</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="regels.html">Regels</a></li>
+                <li><a href="uitleg.html">Uitleg</a></li>
+                <li><a href="webshop.html" class="active">Webshop</a></li>
+                <li><a href="staff.html">Staff</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero page-hero fade-in">
+        <h1>Webshop</h1>
+        <p>Steun de server en unlock exclusieve perks, ranks en in-game items</p>
+    </section>
+
+    <div class="container">
+        <div class="card fade-in" style="max-width: 700px; margin: 0 auto; text-align: center;">
+            <h2>💎 Premium Webshop</h2>
+            <p style="margin-bottom: 2.5rem; color: var(--text-secondary); line-height: 1.9;">
+                Ontdek onze exclusive ranks, items en perks in de webshop. <br>
+                Elke aankoop helpt ons om de server draaiende te houden en te verbeteren!
+            </p>
+            
+            <div style="background: rgba(99, 102, 241, 0.1); padding: 2.5rem; border-radius: 16px; margin-bottom: 2.5rem; border: 1px solid rgba(99, 102, 241, 0.2);">
+                <h3 style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1.5rem; font-size: 1.5rem;">✨ Wat kun je kopen?</h3>
+                <ul style="list-style: none; color: var(--text-secondary); line-height: 2.2; font-size: 1.05rem;">
+                    <li>👑 VIP & Premium Ranks met exclusieve commands</li>
+                    <li>💵 In-game currency & resource packs</li>
+                    <li>🎁 Mystery Crate Keys met rare items</li>
+                    <li>🏗️ Extra claim blocks voor megabuilds</li>
+                    <li>🌈 Cosmetische items, pets & particles</li>
+                    <li>⚡ XP Boosts, fly time & special perks</li>
+                </ul>
+            </div>
+
+            <button class="btn" onclick="redirectToWebshop()" style="font-size: 1.2rem; padding: 1.3rem 3rem;">
+                🛍️ Open Webshop
+            </button>
+            
+            <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem; opacity: 0.8;">
+                Je wordt doorgestuurd naar onze beveiligde externe webshop
+            </p>
+        </div>
+
+        <div class="card fade-in" style="max-width: 700px; margin: 3rem auto; background: rgba(59, 130, 246, 0.1); border-left-color: var(--primary-color);">
+            <h2 style="color: var(--primary-color);">ℹ️ Belangrijke Informatie</h2>
+            <p style="color: var(--text-secondary); line-height: 2;">
+                ✅ Vul je correcte Minecraft username in bij checkout<br>
+                ✅ Items worden automatisch toegevoegd binnen 5 minuten<br>
+                ✅ Problemen? Contact staff via Discord of in-game<br>
+                ✅ Alle betalingen via beveiligde payment provider<br>
+                ✅ Refund mogelijk binnen 14 dagen (niet-gebruikte items)
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem;">
+            <a href="index.html" class="btn btn-secondary">🏠 Terug naar Home</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Remake Kingdom. Alle rechten voorbehouden.</p>
+    </footer>
+
+    <script>
+        function redirectToWebshop() {
+            // Redirect naar de geconfigureerde webshop URL
+            window.location.href = WEBSHOP_URL;
+        }
+
+        // Auto-redirect optie (uitgeschakeld standaard)
+        // Uncomment de volgende regels om automatisch door te sturen na 3 seconden:
+        // setTimeout(() => {
+        //     redirectToWebshop();
+        // }, 3000);
+
+        // Fade in animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.6s ease-out';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

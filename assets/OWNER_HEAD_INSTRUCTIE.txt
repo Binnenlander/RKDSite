@@ -1,0 +1,12 @@
+INSTRUCTIE: Owner Hoofd Toevoegen
+====================================
+
+Sla de Minecraft skin afbeelding op als: owner-head.png in deze map (assets/)
+
+De website is geconfigureerd om deze afbeelding te gebruiken voor de Beheer/Owner op de staff pagina.
+
+Als je een andere speler skin wilt gebruiken, kun je deze downloaden van:
+- https://mc-heads.net/avatar/SPELERNAAM
+- https://crafatar.com/avatars/UUID
+
+Of upload je eigen Minecraft skin screenshot.

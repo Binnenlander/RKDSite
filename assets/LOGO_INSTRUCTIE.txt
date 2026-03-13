@@ -1,0 +1,12 @@
+BELANGRIJK: LOGO TOEVOEGEN
+=============================
+
+Sla je RKD logo op als: logo.png in deze map (assets/)
+
+De website is al geconfigureerd om het logo te gebruiken.
+Het logo wordt gebruikt in:
+- De navigatiebalk op alle pagina's
+- De hero sectie op de homepage
+
+Ondersteunde formaten: PNG (met transparante achtergrond aanbevolen)
+Aanbevolen grootte: 80-150px breed voor navigatie
