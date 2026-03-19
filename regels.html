@@ -222,7 +222,7 @@
             });
         });
 
-        // Collapsible functionality
+        // Collapsible functionality - Fixed
         document.addEventListener('DOMContentLoaded', function() {
             const headers = document.querySelectorAll('.collapsible-header');
             
@@ -230,11 +230,18 @@
                 header.addEventListener('click', function() {
                     const content = this.nextElementSibling;
                     const icon = this.querySelector('.collapse-icon');
+                    const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
                     
-                    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-                        content.style.maxHeight = '0px';
-                        icon.style.transform = 'rotate(0deg)';
-                    } else {
+                    // Close all other sections first
+                    headers.forEach(otherHeader => {
+                        const otherContent = otherHeader.nextElementSibling;
+                        const otherIcon = otherHeader.querySelector('.collapse-icon');
+                        otherContent.style.maxHeight = '0px';
+                        otherIcon.style.transform = 'rotate(0deg)';
+                    });
+                    
+                    // Open this section if it was closed
+                    if (!isOpen) {
                         content.style.maxHeight = content.scrollHeight + 'px';
                         icon.style.transform = 'rotate(90deg)';
                     }
