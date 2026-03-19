@@ -3,101 +3,424 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Regels - Remake Kingdom</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Regels | Remake Kingdom</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <style>
+        :root {
+            --kingdom-red: #8B0000;
+            --kingdom-gold: #FFD700;
+            --kingdom-purple: #663399;
+            --main-gradient: linear-gradient(135deg, var(--kingdom-red), var(--kingdom-gold));
+            --dark-panel: rgba(15, 15, 20, 0.95);
+            --content-bg: rgba(20, 20, 25, 0.98);
+            --text-main: #ffffff;
+            --cat-1: #00ff88;
+            --cat-2: #ff8800;
+            --cat-3: #ff4444;
+            --support-blue: #00d9ff;
+        }
+
+        /* ===== ANIMATIE STYLES ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: url('assets/PLACE_BACKGROUND_HERE.txt') no-repeat center center fixed, 
+                        linear-gradient(135deg, #1a1a2e, #16213e, #0f1419); 
+            background-size: cover;
+            color: var(--text-main);
+            background-color: #0a0a0a;
+            overflow-x: hidden;
+        }
+
+        .top-info {
+            width: 100%; padding: 25px 0; text-align: center; 
+            text-transform: uppercase; font-weight: 900; letter-spacing: 2px;
+            font-size: 14px; color: rgba(255,255,255,0.7);
+        }
+
+        #serverIP { color: var(--kingdom-gold); cursor: pointer; transition: 0.2s; padding: 5px 12px; }
+        #serverIP:hover { text-shadow: 0 0 10px var(--kingdom-gold); }
+
+        .wrapper { max-width: 950px; margin: 10px auto 50px; padding: 0 20px; }
+
+        .btn-main {
+            display: inline-block; background: #ffffff; color: #000;
+            text-decoration: none; font-weight: 900; padding: 12px 28px;
+            border-radius: 14px; text-transform: uppercase; border: 3px solid #000;
+            box-shadow: 0 6px 0px #000; transition: all 0.1s;
+        }
+        .btn-main:hover { transform: translateY(2px); box-shadow: 0 4px 0 #000; }
+        .btn-main:active { transform: translateY(6px); box-shadow: 0 0 0 #000; }
+
+        h1 { 
+            font-size: clamp(40px, 8vw, 65px); font-weight: 900; text-align: center; 
+            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; text-transform: uppercase; filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+        }
+
+        .search-container { margin-bottom: 40px; }
+        .search-input {
+            width: 100%; padding: 20px 25px; background: var(--dark-panel);
+            border: 2px solid rgba(255,255,255,0.1); border-radius: 15px; color: white;
+            font-size: 18px; outline: none; transition: 0.3s; box-sizing: border-box;
+        }
+        .search-input:focus { border-color: var(--kingdom-gold); }
+
+        .rules-container { display: flex; flex-direction: column; gap: 15px; }
+        
+        .rule-item { 
+            position: relative; background: var(--dark-panel); border-radius: 20px; 
+            overflow: hidden; transition: 0.3s; padding: 2px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(255, 215, 0, 0.4));
+        }
+        .rule-item.hidden { display: none; }
+
+        .rule-inner { background: var(--dark-panel); border-radius: 18px; overflow: hidden; }
+        
+        .rule-header {
+            width: 100%; padding: 25px; background: none; border: none;
+            color: white; font-size: 20px; font-weight: 900;
+            text-align: left; cursor: pointer; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        
+        .rule-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; background: var(--content-bg); }
+        .content-inner { padding: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+        
+        .rule-point strong { 
+            background: var(--main-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: block; font-size: 19px; text-transform: uppercase; margin-bottom: 5px;
+        }
+        .rule-point p { margin: 0 0 25px; color: #d1d1d1; line-height: 1.7; }
+
+        .icon { 
+            width: 35px; height: 35px; 
+            background: var(--main-gradient);
+            border-radius: 10px; display: flex; align-items: center; justify-content: center; 
+            transition: 0.4s; font-weight: 900; color: white;
+        }
+        .rule-item.active .icon { transform: rotate(45deg); filter: hue-rotate(45deg); }
+
+        .sanctie-wrapper { 
+            margin-top: 80px; padding: 50px 40px; background: var(--dark-panel); 
+            border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .sanctie-titel { font-size: 45px; text-align: center; margin-bottom: 10px; text-transform: uppercase; font-weight: 900; }
+        .stack-alert { text-align: center; color: #ffcc00; font-weight: bold; margin-bottom: 40px; background: rgba(255, 204, 0, 0.1); padding: 15px; border-radius: 10px; border: 1px dashed #ffcc00; }
+
+        .sanctie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .sanctie-card { background: rgba(10, 10, 15, 0.5); border-radius: 20px; padding: 30px; border-top: 6px solid white; }
+        .cat-1 { border-color: var(--cat-1); } 
+        .cat-2 { border-color: var(--cat-2); } 
+        .cat-3 { border-color: var(--cat-3); }
+        .cat-support { border-color: var(--support-blue); }
+        
+        .sanctie-card li::before { content: "» "; color: var(--kingdom-gold); font-weight: bold; }
+
+        footer { text-align: center; padding: 80px 20px; opacity: 0.4; font-weight: bold; }
+
+        /* Mobile & Tablet Responsive */
+        @media (max-width: 768px) {
+            .wrapper { padding: 0 15px; }
+            h1 { font-size: 2.5rem !important; }
+            .sanctie-wrapper { margin-top: 40px; padding: 30px 20px !important; }
+            .sanctie-titel { font-size: 2rem !important; }
+            .sanctie-grid { grid-template-columns: 1fr !important; }
+            .sanctie-card { padding: 20px !important; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem !important; }
+            .sanctie-titel { font-size: 1.75rem !important; }
+            .sanctie-card h3 { font-size: 1.1rem !important; }
+            .sanctie-card li { font-size: 0.9rem; }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="regels.html" class="active">Regels</a></li>
-                <li><a href="uitleg.html">Uitleg</a></li>
-                <li><a href="webshop.html">Webshop</a></li>
-                <li><a href="staff.html">Staff</a></li>
-            </ul>
+
+    <div class="top-info">
+        REMAKE KINGDOM - IP: <span id="serverIP" onclick="copyIP()">play.remakekd.nl</span>
+    </div>
+
+    <div class="wrapper">
+        <div style="text-align: center; margin-bottom: 30px;" class="reveal">
+            <a href="index.html" class="btn-main">Terug naar Home</a>
         </div>
-    </nav>
+        
+        <h1 class="reveal">Server Regels</h1>
 
-    <section class="hero page-hero fade-in">
-        <h1>📜 Server Regels</h1>
-        <p>Respecteer de regels en geniet van een eerlijke speelervaring voor iedereen</p>
-    </section>
-
-    <div class="container">
-        <!-- Search Bar -->
-        <div class="search-container" style="max-width: 1000px; margin: 0 auto 2rem;">
-            <input type="text" id="rulesSearch" placeholder="🔍 Zoek in regels..." style="width: 100%; padding: 1rem 1.5rem; border-radius: 16px; border: 2px solid rgba(139, 92, 246, 0.3); background: rgba(30, 30, 40, 0.6); backdrop-filter: blur(10px); color: var(--text-primary); font-size: 1rem; font-family: 'Poppins', sans-serif; transition: all 0.3s ease;">
+        <div class="search-container reveal">
+            <input type="text" id="ruleSearch" class="search-input" placeholder="Zoek een regel (bijv. 'PvP', 'Ban', 'Kingdom')...">
         </div>
 
-        <!-- 1. Algemene Regels -->
-        <div class="rules-section card fade-in" data-keywords="algemeen respect cheaten hacken spam staff reclame chat nederlands engels bug abuse griefing account delen regels" style="max-width: 1000px; margin: 0 auto 1.25rem;">
-            <div class="collapsible-header" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none;">
-                <h2 style="margin: 0;">1. 📋 Algemene Regels</h2>
-                <span class="collapse-icon" style="font-size: 1.5rem; transition: transform 0.3s ease; color: var(--accent);">▶</span>
+        <div class="rules-container" id="rulesList"></div>
+
+        <div class="sanctie-wrapper reveal">
+            <h2 class="sanctie-titel">Sanctie Systeem</h2>
+            <p class="stack-alert">⚠ REPETITIE REGEL: 2x Categorie I = Categorie II straf. Houd je aan de regels!</p>
+            <div class="sanctie-grid">
+                <div class="sanctie-card cat-1 reveal">
+                    <div style="font-size:32px; font-weight:900; color:var(--cat-1)">CAT I</div>
+                    <div style="font-size:13px; font-weight:800; opacity:0.6; margin-bottom:15px;">WARN / MUTE / KICK</div>
+                    <ul style="list-style:none; padding:0; color:#ccc;">
+                        <li>» Spammen / Caps</li>
+                        <li>» Lichte beledigingen</li>
+                        <li>» Niet luisteren naar staff</li>
+                        <li>» Kleine overtredingen</li>
+                    </ul>
+                </div>
+                <div class="sanctie-card cat-2 reveal">
+                    <div style="font-size:32px; font-weight:900; color:var(--cat-2)">CAT II</div>
+                    <div style="font-size:13px; font-weight:800; opacity:0.6; margin-bottom:15px;">3U - 24U BAN / INV WIPE</div>
+                    <ul style="list-style:none; padding:0; color:#ccc;">
+                        <li>» Griefing van bases</li>
+                        <li>» Combat Logging</li>
+                        <li>» Ernstige regelovertreding</li>
+                        <li>» Herhaaldelijk storen</li>
+                    </ul>
+                </div>
+                <div class="sanctie-card cat-3 reveal">
+                    <div style="font-size:32px; font-weight:900; color:var(--cat-3)">CAT III</div>
+                    <div style="font-size:13px; font-weight:800; opacity:0.6; margin-bottom:15px;">PERMANENTE BAN</div>
+                    <ul style="list-style:none; padding:0; color:#ccc;">
+                        <li>» Hacken of Cheaten</li>
+                        <li>» Doxxing (Privacy)</li>
+                        <li>» Items dupliceren (Duping)</li>
+                        <li>» Ernstige toxiciteit</li>
+                    </ul>
+                </div>
+                <div class="sanctie-card cat-support reveal">
+                    <div style="font-size:32px; font-weight:900; color:var(--support-blue)">HULP</div>
+                    <div style="font-size:13px; font-weight:800; opacity:0.6; margin-bottom:15px;">VRAGEN?</div>
+                    <ul style="list-style:none; padding:0; color:#ccc;">
+                        <li>» Vragen over regels?</li>
+                        <li>» Ongeldige Sanctie?</li>
+                        <li>» Opmerkingen?</li>
+                        <li>» Neem contact op met staff</li>
+                    </ul>
+                </div>
             </div>
-            <div class="collapsible-content" style="max-height: 0; overflow: hidden; transition: max-height 0.4s ease;">
-                <ul class="rules-list" style="margin-top: 0.75rem;">
-                    <li>
-                        <strong>1. Respecteer iedereen</strong><br>
-                        Wees vriendelijk en behulpzaam. Geen schelden, discriminatie, pesten of doelbewuste provocatie. Iedereen moet zich veilig voelen.
-                    </li>
-                    <li>
-                        <strong>2. Niet cheaten of hacken</strong><br>
-                        Gebruik geen hacks, mods, clients of tools die een oneerlijk voordeel geven (x-ray, speed, fly, etc.). Het is ook verboden om anderen te helpen cheaten.
-                    </li>
-                    <li>
-                        <strong>3. Geen spam</strong><br>
-                        Spam niet in chat of in channels. Dit betekent: herhaald dezelfde berichten, CAPS LOCK, ongevraagde @mentions en reclame.
-                    </li>
-                    <li>
-                        <strong>4. Luister naar staff</strong><br>
-                        Volg de instructies van staff op, ook als je het er niet mee eens bent. Discussies kunnen later via privé met een moderator of admin.
-                    </li>
-                    <li>
-                        <strong>5. Geen reclame</strong><br>
-                        Geen reclame voor andere Minecraft servers, websites, Discord-servers of producten zonder duidelijke toestemming van staff.
-                    </li>
-                    <li>
-                        <strong>6. Nederlands of Engels in publieke chat</strong><br>
-                        Om iedereen mee te laten doen, spreken we in de algemene chat Nederlands of Engels. In privégesprekken mag uiteraard een andere taal.
-                    </li>
-                    <li>
-                        <strong>7. Geen bug abuse</strong><br>
-                        Als je een bug, glitch of exploit vindt, meld dit dan direct aan staff. Het is verboden om dit te gebruiken voor persoonlijk voordeel.
-                    </li>
-                    <li>
-                        <strong>8. Houd het leuk voor iedereen</strong><br>
-                        Denk na over je gedrag: als iets anderen stoort of harm kan veroorzaken, laat het dan. We spelen samen, dus wees respectvol.
-                    </li>
-                    <li>
-                        <strong>9. Geen griefing</strong><br>
-                        Verniel of steel niets van anderen zonder vooraf toestemming. Dit geldt voor basis, farms, boten, etc.
-                    </li>
-                    <li>
-                        <strong>10. Geen account-sharing</strong><br>
-                        Deel je account niet met anderen. Jij bent verantwoordelijk voor alles wat er met je account gebeurt.
-                    </li>
-                    <li>
-                        <strong>11. Geen doxxing of privacy schending</strong><br>
-                        Plaats geen persoonlijke gegevens van jezelf of anderen. Respecteer ieders privacy.
-                    </li>
-                    <li>
-                        <strong>12. Geen stelen</strong><br>
-                        Vraag altijd toestemming voordat je spullen van iemand anders gebruikt of meeneemt.
-                    </li>
-                    <li>
-                        <strong>13. Bouw netjes en veilig</strong><br>
-                        Maak geen traps in openbare gebieden die andere spelers kunnen belemmeren of schade kunnen toebrengen.
-                    </li>
-                    <li>
-                        <strong>14. Grote bouwwerken alleen met toestemming</strong><br>
-                        Grote bouwwerken mogen alleen worden gebouwd door builders. Er is een speciale Minecraft-server voor bouwers, waar je ook om goedkeuring kunt vragen; elk project moet eerst door hogere staff worden goedgekeurd.
-                    </li>
-                    <li>
-                        <strong>15. Ondergrondse bases</strong><br>
-                        Bases onder de grond zijn toegestaan, maar gebruik geen deuren. Gebruik in plaats daarvan <strong>double fence gates</strong> zodat anderen er met influence doorheen kunnen.
-                    </li>
+        </div>
+
+        <footer class="reveal">REMAKE KINGDOM &copy; 2026</footer>
+    </div>
+
+    <script>
+        const rulesData = [
+            ["📌 1. Algemene Regels", [
+                ["Respect & Fatsoen", "Behandel iedereen met respect. Discriminatie, racisme, pesten of hatelijke uitlatingen worden niet getolereerd. Dit geldt voor chat, voice en bouwwerken."],
+                ["Nederlandse & Engelse Taal", "Gebruik alleen Nederlands of Engels in de algemene chat zodat iedereen mee kan doen. Privégesprekken mogen in elke taal."],
+                ["Geen Spam of Caps", "Verstoor de chat niet met spam, herhaalde berichten of overdadig gebruik van hoofdletters (CAPS)."],
+                ["Luister naar Staff", "Volg de instructies van staffleden op. Zij hebben het laatste woord en zijn er om de server leuk te houden voor iedereen."],
+                ["Geen Reclame", "Geen advertenties voor andere servers, Discord servers of producten zonder expliciete toestemming van staff."],
+                ["Privacy Respecteren", "Deel geen privégegevens van jezelf of anderen. Doxxing (privéinfo delen) leidt tot een directe ban."],
+                ["Account Verantwoordelijkheid", "Jij bent verantwoordelijk voor alles wat er met je account gebeurt. Geen account sharing."],
+                ["Bug Melden", "Vind je een bug of glitch? Meld dit direct bij staff. Het misbruiken van bugs voor voordeel is verboden."],
+                ["Gezond Verstand", "Gebruik je gezond verstand. Als je twijfelt of iets mag, vraag het dan aan staff voordat je het doet."],
+                ["Staff Respect", "Behandel staff met respect. Zij doen vrijwillig hun best om de server draaiende te houden en leuk te maken voor iedereen."]
+            ]],
+            ["📌 2. Kingdom Gameplay", [
+                ["Kingdom Systeem", "Elke speler behoort tot één van de 6 Kingdoms. Je kingdom bepaalt je team, bondgenoten en vijanden."],
+                ["PvP Zones", "PvP staat aan in bepaalde zones zoals tolbruggen, landbruggen en tijdens oorlogen. In veilige zones is PvP uitgeschakeld."],
+                ["Tolbruggen & Landbruggen", "Deze strategische punten zijn altijd PvP-zones. Controleer deze voor extra voordelen voor je kingdom."],
+                ["Kingdom Oorlogen", "Elke zondag is er een grote oorlog tussen alle kingdoms. Verdedig je territorium en val anderen aan!"],
+                ["Balkadurkoth Event", "Elke woensdag vindt dit epische event plaats. Team samen met andere kingdoms tegen de ultieme uitdaging."],
+                ["Strategische Aanvallen", "24/7 strategische aanvallen op andere kingdoms zijn toegestaan in aangewezen gebieden."],
+                ["Kingdom Loyalty", "Verraad van je eigen kingdom is toegestaan, maar heeft gevolgen. Andere kingdoms kunnen je niet vertrouwen."],
+                ["Resource Controle", "Bepaalde resources zijn schaars en moeten bevochten worden. Dit zorgt voor natuurlijke conflicten tussen kingdoms."],
+                ["Kingdom Claims", "Elk kingdom heeft zijn eigen territorium. Respecteer de grenzen tenzij je officieel in oorlog bent."],
+                ["Handelseiland", "Het neutrale handelseiland is een veilige haven waar PvP uitgeschakeld is. Hier kun je veilig handelen."]
+            ]],
+            ["📌 3. PvP & Combat Regels", [
+                ["Eerlijk Vechten", "Gebruik geen hacks, mods of exploits tijdens PvP. Alleen skill en strategie bepalen de winnaar."],
+                ["Combat Logging Verbod", "Het uitloggen tijdens een gevecht om doodgaan te voorkomen is strikt verboden."],
+                ["PvP Zones Respecteren", "PvP alleen in aangewezen zones. Safe zones zijn safe zones - geen uitzonderingen."],
+                ["Combat Timer", "Nadat je in gevecht bent geweest, moet je 60 seconden wachten voordat je veilig kunt uitloggen."],
+                ["Gear Limits", "Bepaalde items hebben limits (zie Item Caps sectie). Overtredingen resulteren in confiscatie."],
+                ["Geen Spawn Killing", "Herhaaldelijk killen van spelers direct na respawn is niet toegestaan."],
+                ["Team Fights", "Kingdom vs Kingdom fights zijn toegestaan. Solo spelers kunnen zich aansluiten bij kingdoms."],
+                ["Traps in PvP", "Traps zijn toegestaan in PvP zones, maar moeten een eerlijke ontsnappingskans bieden."],
+                ["Combat Logging Straf", "Combat loggers verliezen hun items en krijgen een tijdelijke ban."],
+                ["Fair Play", "Respecteer je tegenstander. Geen toxic gedrag in PvP, winnen en verliezen hoort erbij."]
+            ]],
+            ["📌 4. Builds, Bases & Claims", [
+                ["Base Claiming", "Claim je base met een duidelijk zichtbaar bordje met 'BASE - [naam]' om bescherming te krijgen."],
+                ["Claim Radius", "Een geclaimed base beschermt 50 blokken in elke richting (100x100 gebied totaal)."],
+                ["Griefing Verbod", "Slopen, stelen of saboteren van geclaimed bases is strikt verboden, zelfs tijdens oorlog."],
+                ["Building Standards", "Bouw netjes en passend bij het Kingdom thema. Lelijke builds kunnen verwijderd worden."],
+                ["Underground Bases", "Ondergrondse bases zijn toegestaan, maar gebruik double fence gates i.p.v. deuren voor toegang."],
+                ["Kingdom Architectuur", "Probeer je builds passend te maken bij de stijl van je kingdom voor extra immersie."],
+                ["Landscape Respect", "Verander het landschap niet drastisch zonder toestemming. Behoud de natuurlijke schoonheid."],
+                ["Farm Placement", "Plaats grote farms niet direct naast andere bases. Houd minimaal 100 blokken afstand."],
+                ["Signs & Markers", "Gebruik duidelijke bordjes voor eigendom, instructies en waarschuwingen."],
+                ["Abandoned Bases", "Bases van spelers die langer dan 14 dagen offline zijn kunnen door staff vrijgegeven worden."]
+            ]],
+            ["📌 5. Traps & Redstone", [
+                ["Trap Locaties", "Traps zijn toegestaan rond je eigen base en in PvP-zones, maar niet in safe zones of openbare gebieden."],
+                ["Eerlijke Traps", "Elke trap moet een eerlijke ontsnappingskans bieden. Geen instant-kill traps."],
+                ["TNT Limiet", "Maximum 5 TNT per trap om lag te voorkomen en eerlijk te blijven."],
+                ["Zichtbare Triggers", "Gebruik alleen zichtbare triggers zoals pressure plates, tripwires of buttons."],
+                ["Geen Spawn Traps", "Traps bij spawn punten of ports zijn verboden."],
+                ["Portal Safety", "Nether portals mogen niet getrapt worden op een manier die ontsnapping onmogelijk maakt."],
+                ["Redstone Limits", "Grote redstone machines die lag veroorzaken worden beperkt of verwijderd."],
+                ["Trap Ownership", "De persoon die de trap bouwt is verantwoordelijk voor alle consequenties."],
+                ["Staff Inspectie", "Staff mag elke trap inspecteren en verwijderen als deze niet voldoet aan de regels."],
+                ["Creative Trapping", "Wees creatief maar eerlijk. Het doel is plezier, niet frustratie."]
+            ]],
+            ["📌 6. Item Caps & Verboden Items", [
+                ["Ender Pearls", "Maximum 64 ender pearls per speler om teleporten te beperken."],
+                ["Golden Apples", "Maximum 32 golden apples per speler toegestaan."],
+                ["Enchanted Golden Apples", "Maximum 8 god apples per speler - zeer waardevol item."],
+                ["Totems of Undying", "Maximum 2 totems per speler in inventory. Het random gebruiken is verboden."],
+                ["End Crystals", "End crystals zijn volledig verboden vanwege hun destructieve kracht."],
+                ["Elytra Verbod", "Elytra zijn verboden om de kingdom warfare gebalanceerd te houden."],
+                ["Netherite Limits", "Netherite items zijn zeldzaam en beperkt beschikbaar via events."],
+                ["Shulker Boxes", "Maximum 5 shulker boxes per speler om opslag te beperken."],
+                ["Potions", "Sterke potions zijn beperkt beschikbaar via crafting recepten."],
+                ["Wither Skulls", "Wither skulls zijn zeer zeldzaam en alleen via speciale events verkrijgbaar."],
+                ["Omzeiling Verbod", "Het verspreiden van items over alt-accounts of verborgen kisten is verboden."],
+                ["Staff Controles", "Staff voert regelmatig controles uit op inventories en opslag."]
+            ]],
+            ["📌 7. War & Events", [
+                ["Zondag Oorlog", "Elke zondag grote oorlog tussen alle kingdoms. Iedereen doet mee!"],
+                ["Oorlog Regels", "Tijdens oorlog gelden speciale regels. Luister naar de event organisatoren."],
+                ["Balkadurkoth Woensdag", "Wekelijkse PvE event waar kingdoms samenwerken tegen een gemeenschappelijke vijand."],
+                ["Event Deelname", "Deelname aan events is sterk aangemoedigd maar niet verplicht."],
+                ["War Declarations", "Officiële oorlogen tussen kingdoms kunnen buiten events plaatsvinden."],
+                ["Siege Warfare", "Kingdoms kunnen elkaar belegeren en forten aanvallen tijdens oorlogstijd."],
+                ["Event Loot", "Speciale items en rewards zijn alleen verkrijgbaar tijdens events."],
+                ["Team Balance", "Staff zorgt voor eerlijke teams tijdens events."],
+                ["Event Planning", "Grote events worden van tevoren aangekondigd in Discord."],
+                ["Victory Rewards", "Winnende kingdoms krijgen speciale voordelen en prijzen."]
+            ]],
+            ["📌 8. Farms & Resources", [
+                ["Farm Types", "Mob farms, crop farms en resource farms zijn toegestaan binnen redelijke grenzen."],
+                ["AFK Farming Verbod", "Volledig AFK farmen is niet toegestaan. Je moet actief betrokken blijven."],
+                ["Lag Prevention", "Farms die server lag veroorzaken worden beperkt of verwijderd."],
+                ["Resource Balance", "Bepaalde resources zijn bewust schaars om competitie te stimuleren."],
+                ["Farm Sharing", "Kingdoms kunnen farms delen, maar wees voorzichtig met vertrouwen."],
+                ["Iron & Gold", "Iron en gold farms zijn beperkt om de economie gebalanceerd te houden."],
+                ["Villager Trading", "Villager trading is toegestaan maar kan beperkt worden als het overpowered wordt."],
+                ["Duplication Verbod", "Elke vorm van item duplicatie is strikt verboden en resulteert in een ban."],
+                ["Farm Raids", "Farms van vijandelijke kingdoms kunnen geraid worden tijdens oorlog."],
+                ["Sustainable Farming", "Bouw farms die het landschap niet volledig vernietigen."]
+            ]],
+            ["📌 9. Trading & Economy", [
+                ["Free Market", "Vrije handel tussen spelers en kingdoms is toegestaan."],
+                ["Scam Bescherming", "Grote trades moeten via staff of met getuigen om scamming te voorkomen."],
+                ["Currency Items", "Diamonds, gold en andere waardevolle items dienen als valuta."],
+                ["Contract Breaking", "Het breken van handelscontracten kan gevolgen hebben voor je reputatie."],
+                ["Cross Kingdom Trade", "Handel tussen kingdoms is toegestaan, maar wees voorzichtig tijdens oorlog."],
+                ["Market Manipulation", "Extreme prijsmanipulatie die de economie schaadt wordt aangepakt door staff."],
+                ["Trade Routes", "Bescherm je handelsroutes en karavanen tegen rivaliserende kingdoms."],
+                ["Shop Building", "Je mag winkels bouwen, maar deze moeten voldoen aan building standards."],
+                ["Debt Collection", "Schulden kunnen via PvP of diplomatieke druk ingevorderd worden."],
+                ["Quality Assurance", "Wees eerlijk over de kwaliteit van items die je verkoopt."]
+            ]],
+            ["📌 10. Discord & Communication", [
+                ["Discord Link", "Lid zijn van de Discord server is verplicht voor belangrijke aankondigingen."],
+                ["Voice Channel Respect", "Geen earrape, soundboards of andere geluidsoverlast in voice chats."],
+                ["Kingdom Channels", "Elk kingdom heeft zijn eigen privé kanalen voor strategieën."],
+                ["Staff Contact", "Voor vragen of problemen, maak een ticket aan in Discord."],
+                ["Event Planning", "Belangrijke events worden aangekondigd via Discord."],
+                ["Cross Platform Rules", "Alle serverregels gelden ook in Discord kanalen."],
+                ["Information Sharing", "Strategische informatie delen met vijandelijke kingdoms is verraad."],
+                ["Spam Prevention", "Geen spam in Discord kanalen, dit verstoort de communicatie."],
+                ["Language Rules", "Nederlands en Engels zijn de hoofdtalen in algemene kanalen."],
+                ["Staff Decisions", "Staff beslissingen zijn definitief, maar kunnen besproken worden via tickets."]
+            ]],
+            ["📌 Slotregel - Staff Authority", [
+                ["Finale Autoriteit", "Staff heeft het laatste woord in alle situaties, ook als regels niet specifiek van toepassing zijn."],
+                ["Rule Updates", "Regels kunnen gewijzigd worden. Houd Discord en de website in de gaten voor updates."],
+                ["Context Matters", "Staff beoordeelt situaties altijd in context, niet alleen op basis van letterlijke regels."],
+                ["Fair Play Spirit", "De regels zijn er om eerlijk spel en plezier voor iedereen te garanderen."],
+                ["Appeal Process", "Onterecht bestraft? Maak een ticket aan met bewijs voor heroverweging."],
+                ["Community First", "Beslissingen worden genomen met het welzijn van de hele community in gedachten."],
+                ["Respect Authority", "Respecteer staff beslissingen, ook als je het er niet mee eens bent."],
+                ["Improvement Focus", "Regels zijn er om te leren en verbeteren, niet om te straffen."],
+                ["Open Communication", "Bij vragen of onduidelijkheden, praat altijd eerst met staff."],
+                ["Enjoy the Game", "Onthoud: het belangrijkste is dat iedereen plezier heeft op Remake Kingdom!"]
+            ]]
+        ];
+
+        const list = document.getElementById('rulesList');
+        
+        // Render functie met reveal class voor animatie
+        function render() {
+            list.innerHTML = '';
+            rulesData.forEach((rule, i) => {
+                const div = document.createElement('div');
+                div.className = 'rule-item reveal'; // Reveal toegevoegd
+                let pts = rule[1].map(p => `<div class="rule-point"><strong>${p[0]}</strong><p>${p[1]}</p></div>`).join('');
+                div.innerHTML = `<div class="rule-inner"><button class="rule-header">${rule[0]} <span class="icon">+</span></button><div class="rule-content"><div class="content-inner">${pts}</div></div></div>`;
+                list.appendChild(div);
+            });
+            initReveal(); // Start de scroll observer na het renderen
+        }
+
+        // Scroll Reveal Systeem
+        function initReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        render();
+
+        document.getElementById('ruleSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.rule-item').forEach((item, i) => {
+                const text = JSON.stringify(rulesData[i]).toLowerCase();
+                item.classList.toggle('hidden', !text.includes(term));
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            const h = e.target.closest('.rule-header');
+            if(!h) return;
+            const item = h.closest('.rule-item');
+            const content = item.querySelector('.rule-content');
+            const active = item.classList.contains('active-rule');
+            
+            // Sluit andere (optioneel)
+            document.querySelectorAll('.rule-item').forEach(el => {
+                el.classList.remove('active-rule');
+                el.querySelector('.rule-content').style.maxHeight = null;
+            });
+
+            if(!active) {
+                item.classList.add('active-rule');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+
+        function copyIP() {
+            navigator.clipboard.writeText("play.remakekd.nl");
+            const s = document.getElementById('serverIP');
+            s.innerText = "IP GEKOPIEERD!";
+            setTimeout(() => { s.innerText = "play.remakekd.nl"; }, 2000);
+        }
+    </script>
+</body>
+</html>
                     <li>
                         <strong>16. Volg de serverstructuur</strong><br>
                         Gebruik de juiste kanalen voor vragen, advertenties of reports (zoals aangegeven in Discord/website).
